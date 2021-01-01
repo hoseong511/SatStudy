@@ -1,4 +1,14 @@
+## commit
+echo "# To-Do" >> README.md
+git init
+git add README.md
+git commit -m "Your message!"
+git branch -M master
+git remote add origin https://github.com/hoseong511/Study.git
+git push -u origin master
+
 ## push
 git remote add origin https://github.com/hoseong511/Study.git
 git branch -M main
 git push -u origin main
+
