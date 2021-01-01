@@ -1,0 +1,4 @@
+## push
+git remote add origin https://github.com/hoseong511/Study.git
+git branch -M main
+git push -u origin main
