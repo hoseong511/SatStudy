@@ -1,0 +1,65 @@
+-- public.tbl_attach definition
+
+-- Drop table
+
+-- DROP TABLE public.tbl_attach;
+
+CREATE TABLE public.tbl_attach (
+	idx int4 NOT NULL,
+	seq int4 NOT NULL,
+	filename varchar(256) NULL DEFAULT NULL::character varying,
+	writer varchar(50) NULL DEFAULT NULL::character varying,
+	indate date NULL,
+	CONSTRAINT tbl_attach_pkey PRIMARY KEY (idx, seq)
+);
+
+-- public.tbl_board definition
+
+-- Drop table
+
+-- DROP TABLE public.tbl_board;
+
+CREATE TABLE public.tbl_board (
+	idx serial,
+	title varchar(300) NULL,
+	contents varchar(4000) NULL,
+	count int4 NULL,
+	writer varchar(50) NULL,
+	indate date NULL	
+);
+
+
+-- public.tbl_reply definition
+
+-- Drop table
+
+-- DROP TABLE public.tbl_reply;
+
+CREATE TABLE public.tbl_reply (
+	idx int4 NULL,
+	seq int4 NULL,
+	reply varchar(1000) NULL,
+	writer varchar(50) NULL,
+	indate date NULL
+);
+
+
+-- public.tbl_user definition
+
+-- Drop table
+
+-- DROP TABLE public.tbl_user;
+
+CREATE TABLE public.tbl_user (
+	user_id varchar(30) NULL,
+	user_name varchar(50) NULL,
+	"password" varchar(20) NULL,
+	use_yn varchar(1) NULL
+);
+
+INSERT INTO tbl_user
+(user_id, user_name, password, use_yn)
+VALUES('admin', '관리자', '1234', 'Y');
+INSERT INTO tbl_user
+(user_id, user_name, password, use_yn)
+VALUES('guest', '사용자', '1234', 'Y');
