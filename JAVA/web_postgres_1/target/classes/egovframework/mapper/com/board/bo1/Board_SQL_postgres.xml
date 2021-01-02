@@ -3,200 +3,202 @@
 
 <mapper namespace="Board">
 
-<resultMap id="boardMap"
-type="egovframework.com.board.bo1.service.BoardVO">
-<result property="idx" column="idx" />
-<result property="title" column="title" />
-<result property="contents" column="contents" />
-<result property="writer" column="writer" />
-<result property="writerNm" column="writerNm" />
-<result property="indate" column="indate" />
-</resultMap>
-<insert id="insertBoard" parameterType="egovframework.com.board.bo1.service.BoardVO">
-
-INSERT INTO TBL_BOARD
-(
-IDX
-, TITLE
-, CONTENTS
-, COUNT
-, WRITER , INDATE )
-VALUES ( default
-, #{title,jdbcType=VARCHAR}
-, #{contents, jdbcType=VARCHAR}
-, #{count, jdbcType=INTEGER}
-, #{writer, jdbcType=VARCHAR} , NOW() )
-
-</insert>
-<insert id="insertReply" parameterType="egovframework.com.board.bo1.service.BoardVO">
-
-INSERT INTO TBL_REPLY
-(
-IDX
-, SEQ
-, REPLY
-, WRITER
-, INDATE )
-VALUES ( #{idx, jdbcType=INTEGER}
-, (SELECT
-COALESCE(MAX(X.SEQ)+1,1) FROM TBL_REPLY X WHERE X.IDX=#{idx, jdbcType=INTEGER})
-, #{reply,  jdbcType=VARCHAR}
-, #{writer, jdbcType=VARCHAR}
-, NOW() )
-
-</insert>
-<update id="updateBoard">
-
-UPDATE TBL_BOARD
-SET TITLE=#{title, jdbcType=VARCHAR}
-, CONTENTS=#{contents, jdbcType=VARCHAR}
-WHERE IDX=#{idx, jdbcType=INTEGER}
-
-</update>
-<delete id="deleteBoard" parameterType="egovframework.com.board.bo1.service.BoardVO">
-
-DELETE FROM TBL_BOARD
-WHERE IDX=#{idx, jdbcType=INTEGER}
-
-</delete>
-<select id="selectBoard" parameterType="egovframework.com.board.bo1.service.BoardVO"
-resultMap="boardMap">
-
-SELECT 
-	A.IDX as idx ,
-	A.TITLE as title ,
-	A.CONTENTS as contents ,
-	COALESCE(A.COUNT,0) as count ,
-	A.WRITER as writer ,
-	A.INDATE as indate ,
-	B.USER_NAME as writerNm 
-FROM TBL_BOARD A 
-LEFT JOIN TBL_USER B 
-ON A.WRITER = B.USER_ID WHERE A.IDX=#{idx, jdbcType=VARCHAR}
-
-</select>
-<select id="selectBoardList" parameterType="egovframework.com.board.bo1.service.BoardVO"
-resultType="egovMap">
-
-SELECT
-	A.IDX as idx,
-	A.TITLE as title,
-	A.CONTENTS as contents,
-	COALESCE(A.COUNT,0) as count,
-	A.WRITER as writer,
-	A.INDATE as indate,
-	B.USER_NAME as writerNm, 
-	 (
-		SELECT 
-			COUNT(*) 
-		FROM TBL_REPLY X 
-		WHERE X.IDX=A.IDX
-		) AS replyCount
+	<resultMap id="boardMap" type="egovframework.com.board.bo1.service.BoardVO">
+		<result property="idx" column="idx" />
+		<result property="title" column="title" />
+		<result property="contents" column="contents" />
+		<result property="writer" column="writer" />
+		<result property="writerNm" column="writerNm" />
+		<result property="indate" column="indate" />
+	</resultMap>
+	<insert id="insertBoard" parameterType="egovframework.com.board.bo1.service.BoardVO">
+	
+		INSERT INTO 
+			TBL_BOARD 
+				( IDX, TITLE, CONTENTS, COUNT, WRITER, INDATE )
+			VALUES 
+				( 
+				 default,
+				 #{title,jdbcType=VARCHAR},
+				 #{contents, jdbcType=VARCHAR},
+				 #{count, jdbcType=INTEGER},
+				 #{writer, jdbcType=VARCHAR},
+				 NOW() 
+				)
 		
-FROM TBL_BOARD A 
-LEFT JOIN TBL_USER B 
-ON A.WRITER = B.USER_ID
-WHERE 1=1
-<if test="searchKeyword != null and searchKeyword != ''">
-AND ( A.TITLE LIKE CONCAT('%', #{searchKeyword}, '%'))
-OR A.CONTENTS LIKE CONCAT('%', #{searchKeyword}, '%')
-</if>
-ORDER BY A.IDX DESC
-LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
-</select>
-<select id="selectBoardListTotCnt" parameterType="egovframework.com.board.bo1.service.BoardVO"
-resultType="int">
-
-SELECT COUNT(*) AS totcnt
-FROM TBL_BOARD A
-WHERE 1=1
-<if test="searchKeyword != null and searchKeyword != ''">
-AND ( A.TITLE LIKE CONCAT('%', #{searchKeyword}, '%'))
-OR
-A.CONTENTS LIKE CONCAT('%', #{searchKeyword}, '%')
-</if>
-</select>
-<select id="selectLoginCheck" parameterType="egovframework.com.board.bo1.service.BoardVO"
-resultType="String">
-
-SELECT 
-	USER_NAME
-FROM TBL_USER
-WHERE 1=1
-AND USER_ID = #{userId}
-AND PASSWORD = #{password}
-</select>
-<select id="selectReplyList" parameterType="egovframework.com.board.bo1.service.BoardVO"
-resultType="egovMap">
-
-SELECT
-A.IDX as idx
-, A.SEQ as seq
-, A.REPLY as reply
-,
-A.WRITER as writer
-, A.INDATE as indate
-FROM TBL_REPLY A
-WHERE 1=1
-AND IDX
-= #{idx, jdbcType=VARCHAR}
-ORDER BY A.SEQ ASC
-</select>
-<update id="updateBoardCount">
-
-UPDATE TBL_BOARD
-SET COUNT=COALESCE(COUNT, 0)+1
-WHERE
-IDX=#{idx, jdbcType=VARCHAR}
-
-</update>
-<delete id="deleteAttach" parameterType="egovframework.com.board.bo1.service.BoardVO">
-
-DELETE FROM TBL_ATTACH
-WHERE IDX=#{idx, jdbcType=VARCHAR}
-
-</delete>
-<insert id="insertAttach" parameterType="egovframework.com.board.bo1.service.BoardVO">
-
-INSERT INTO TBL_ATTACH
-(
-IDX
-, SEQ
-, FILENAME
-, WRITER
-, INDATE )
-VALUES ( #{idx, jdbcType=INTEGER}, 
-			( SELECT
-				COALESCE(MAX(X.SEQ)+1,1) 
-			  FROM TBL_ATTACH X WHERE X.IDX=#{idx, jdbcType=INTEGER}),
-#{filename, jdbcType=VARCHAR}
-, #{writer, jdbcType=VARCHAR}
-, NOW()
-)
-
-</insert>
-<select id="selectAttach" parameterType="egovframework.com.board.bo1.service.BoardVO"
-resultMap="boardMap">
-
-SELECT
-A.IDX as idx
-, A.SEQ as seq
-, A.FILENAME as filename
-, A.WRITER as writer
-, A.INDATE as indate
-FROM TBL_ATTACH A
-WHERE 1=1
-AND
-A.IDX=#{idx, jdbcType=INTEGER}
-AND A.SEQ = 1
-ORDER BY A.SEQ ASC
-
-</select>
-<select id="selectLastIdx" parameterType="egovframework.com.board.bo1.service.BoardVO"
-resultType="String">
-
-SELECT idx FROM tbl_board ORDER BY idx DESC LIMIT 1
-
-</select>
-
+	</insert>
+	<insert id="insertReply" parameterType="egovframework.com.board.bo1.service.BoardVO">
+	
+		INSERT INTO 
+			TBL_REPLY
+				( IDX, SEQ, REPLY, WRITER, INDATE )
+			VALUES 
+				( 
+				 #{idx, jdbcType=INTEGER},
+				 (
+					  SELECT 
+					  	COALESCE(MAX(X.SEQ)+1,1) 
+			  		  FROM 
+			  		  	TBL_REPLY X 
+			  		  WHERE X.IDX=#{idx, jdbcType=VARCHAR}
+		  		  ),
+				 #{reply,  jdbcType=VARCHAR},
+				 #{writer, jdbcType=VARCHAR},
+				 NOW()
+				)
+	
+	</insert>
+	<update id="updateBoard">
+	
+		UPDATE 
+			TBL_BOARD
+		SET 
+			TITLE=#{title, jdbcType=VARCHAR},
+			CONTENTS=#{contents, jdbcType=VARCHAR}
+		WHERE IDX:VARCHAR=#{idx, jdbcType=VARCHAR}
+	
+	</update>
+	<update id="updateBoardCount">
+	
+		UPDATE 
+			TBL_BOARD
+		SET 
+			COUNT=COALESCE(COUNT, 0)+1
+		WHERE IDX::VARCHAR=#{idx}
+	
+	</update>
+	<delete id="deleteBoard" parameterType="egovframework.com.board.bo1.service.BoardVO">
+	
+		DELETE FROM TBL_BOARD
+		WHERE IDX::VARCHAR=#{idx}
+		
+	</delete>
+	<select id="selectBoard" parameterType="egovframework.com.board.bo1.service.BoardVO" resultMap="boardMap">
+	
+		SELECT 
+			A.IDX as idx ,
+			A.TITLE as title ,
+			A.CONTENTS as contents ,
+			COALESCE(A.COUNT,0) as count ,
+			A.WRITER as writer ,
+			A.INDATE as indate ,
+			B.USER_NAME as writerNm 
+		FROM TBL_BOARD A 
+		LEFT JOIN TBL_USER B 
+		ON A.WRITER = B.USER_ID WHERE A.IDX::VARCHAR=#{idx}
+		
+	</select>
+	<select id="selectBoardList" parameterType="egovframework.com.board.bo1.service.BoardVO" resultType="egovMap">
+	
+		SELECT
+			A.IDX as idx,
+			A.TITLE as title,
+			A.CONTENTS as contents,
+			COALESCE(A.COUNT,0) as count,
+			A.WRITER as writer,
+			A.INDATE as indate,
+			B.USER_NAME as writerNm, 
+			 (
+				SELECT 
+					COUNT(*) 
+				FROM TBL_REPLY X 
+				WHERE X.IDX=A.IDX
+				) AS replyCount
+				
+		FROM TBL_BOARD A 
+		LEFT JOIN TBL_USER B 
+		ON A.WRITER = B.USER_ID
+		WHERE 1=1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND ( A.TITLE LIKE CONCAT('%', #{searchKeyword}, '%'))
+			OR A.CONTENTS LIKE CONCAT('%', #{searchKeyword}, '%')
+		</if>
+		ORDER BY A.IDX DESC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+	<select id="selectBoardListTotCnt" parameterType="egovframework.com.board.bo1.service.BoardVO" resultType="int">
+	
+		SELECT COUNT(*) AS totcnt
+		FROM TBL_BOARD A
+		WHERE 1=1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			AND ( A.TITLE LIKE CONCAT('%', #{searchKeyword}, '%'))
+			OR
+			A.CONTENTS LIKE CONCAT('%', #{searchKeyword}, '%')
+		</if>
+	</select>
+	<select id="selectLoginCheck" parameterType="egovframework.com.board.bo1.service.BoardVO" resultType="String">
+	
+		SELECT 
+			USER_NAME
+		FROM TBL_USER
+		WHERE 1=1
+		AND USER_ID = #{userId}
+		AND PASSWORD = #{password}
+		
+	</select>
+	<select id="selectReplyList" parameterType="egovframework.com.board.bo1.service.BoardVO" resultType="egovMap">
+	
+		SELECT
+		A.IDX as idx
+		, A.SEQ as seq
+		, A.REPLY as reply
+		,
+		A.WRITER as writer
+		, A.INDATE as indate
+		FROM TBL_REPLY A
+		WHERE 1=1
+		AND IDX
+		= #{idx, jdbcType=VARCHAR}
+		ORDER BY A.SEQ ASC
+	</select>
+	
+	<delete id="deleteAttach" parameterType="egovframework.com.board.bo1.service.BoardVO">
+	
+		DELETE FROM TBL_ATTACH
+		WHERE IDX::VARCHAR=#{idx}
+		
+	</delete>
+	<insert id="insertAttach" parameterType="egovframework.com.board.bo1.service.BoardVO">
+	
+		INSERT INTO 
+			TBL_ATTACH
+		(
+		IDX
+		, SEQ
+		, FILENAME
+		, WRITER
+		, INDATE )
+		VALUES ( #{idx, jdbcType=VARCHAR}, 
+					( SELECT
+						COALESCE(MAX(X.SEQ)+1,1) 
+					  FROM TBL_ATTACH X WHERE X.IDX=#{idx, jdbcType=VARCHAR}),
+		#{filename, jdbcType=VARCHAR}
+		, #{writer, jdbcType=VARCHAR}
+		, NOW()
+		)
+	
+	</insert>
+	<select id="selectAttach" parameterType="egovframework.com.board.bo1.service.BoardVO" resultMap="boardMap">
+	
+		SELECT
+		A.IDX as idx
+		, A.SEQ as seq
+		, A.FILENAME as filename
+		, A.WRITER as writer
+		, A.INDATE as indate
+		FROM TBL_ATTACH A
+		WHERE 1=1
+		AND
+		A.IDX::VARCHAR=#{idx}
+		AND A.SEQ = 1
+		ORDER BY A.SEQ ASC
+		
+	</select>
+	<select id="selectLastIdx" parameterType="egovframework.com.board.bo1.service.BoardVO" resultType="String">
+	
+		SELECT idx FROM tbl_board ORDER BY idx DESC LIMIT 1
+	
+	</select>
+	
 </mapper>
