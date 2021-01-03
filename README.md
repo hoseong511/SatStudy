@@ -1,6 +1,6 @@
 
-[![build status](https://ci.docker.com/public/job/cli/job/master/badge/icon)]( http://52.79.196.232 )
-[![Build Status](https://ci.docker.com/public/job/cli/job/master/badge/icon)](https://ci.docker.com/public/job/cli/job/master)
+[![build status](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FwohVb%2FbtqFecu5Vh6%2FwbZ5Vsg0o7Ekijipi67GI1%2Fimg.png)]( http://52.79.196.232 )
+
 
 Study
 ==========
