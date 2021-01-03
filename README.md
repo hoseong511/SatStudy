@@ -10,7 +10,7 @@ This repository is the home of a cluster of Web and Algoritm.
 Web
 ===========
 
-`docker/cli` is developed using Docker.
+`Web` is .
 
 Build a linux binary:
 
@@ -50,7 +50,7 @@ In the development environment you can run many tasks, including build binaries:
 $ make binary
 ```
 
-Legal
+xxxx
 =====
 *Brought to you courtesy of our legal counsel. For more context,
 please see the [NOTICE](https://github.com/docker/cli/blob/master/NOTICE) document in this repo.*
@@ -63,7 +63,7 @@ violate applicable laws.
 
 For more information, please see https://www.bis.doc.gov
 
-Licensing
+ooooooooo
 =========
 docker/cli is licensed under the Apache License, Version 2.0. See
 [LICENSE](https://github.com/docker/docker/blob/master/LICENSE) for the full
