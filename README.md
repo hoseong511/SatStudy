@@ -1,5 +1,5 @@
 
-[![build status](http://52.79.196.232)](https://circleci.com/gh/docker/cli/tree/master)
+[![build status](https://ci.docker.com/public/job/cli/job/master/badge/icon)]( http://52.79.196.232 )
 [![Build Status](https://ci.docker.com/public/job/cli/job/master/badge/icon)](https://ci.docker.com/public/job/cli/job/master)
 
 Study
