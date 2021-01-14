@@ -15,25 +15,25 @@ Web
 Build a linux binary:
 
 ```
-$ make -f docker.Makefile binary
+신기신기
 ```
 
 Build binaries for all supported platforms:
 
 ```
-$ make -f docker.Makefile cross
+.md 는 markdown이다.
 ```
 
 Run all linting:
 
 ```
-$ make -f docker.Makefile lint
+docker 깃허브에서 가져옴
 ```
 
 List all the available targets:
 
 ```
-$ make help
+작동이 이상한거 같음..
 ```
 
 ### In-container development environment
