@@ -1,0 +1,50 @@
+{% extends "base_generic.html" %}
+{% block content %}
+{% load static %}
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('{% static "img/post-bg.jpg" %}')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>{{ post.title }} </h1>
+            <h2 class="subheading">Problems look mighty small from 150 miles up</h2>
+            <span class="meta">Posted by
+              <a href="#">
+                {% for c in post.category.all %}
+                  {{ c }}
+                  {% if not forloop.last %}
+                    ,
+                  {% endif %}
+                {% endfor %}
+              </a>
+              {{ post.createDate }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          {% if post.title_image %}
+            <a href="#">
+              <img class="img-fluid" src="{{ post.title_image.url }}" alt="">
+            </a>
+          {% endif %}
+
+          <p> {{ post.content }} </p>
+
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <hr>
+
+{% endblock %}
